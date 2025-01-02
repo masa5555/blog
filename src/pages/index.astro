@@ -1,20 +1,27 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-import { getCollection } from 'astro:content';
-import FormattedDate from '../components/FormattedDate.astro';
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import { getCollection } from "astro:content";
+import FormattedDate from "../components/FormattedDate.astro";
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+const posts = (await getCollection("blog")).sort(
+	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf(),
 );
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<link
+			rel="alternate"
+			type="application/rss+xml"
+			title="blog's Blog"
+			href={new URL("/blog/rss.xml", Astro.site)}
+		/>
+
 		<style>
 			main {
 				width: 960px;
@@ -94,16 +101,33 @@ const posts = (await getCollection('blog')).sort(
 						posts.map((post) => (
 							<li>
 								<a href={`/blog/${post.slug}/`}>
-									<img width={720} height={360} src={post.data.heroImage} alt="" />
+									<img
+										width={720}
+										height={360}
+										src={post.data.heroImage}
+										alt=""
+									/>
 									<h4 class="title">{post.data.title}</h4>
-									<div style={{display: "flex", justifyContent: "space-between"}}>
-										<div>{
-											post.data.tags.map((tag) => (
-												<span style={{fontSize: '14px', background: 'white', margin: "4px"}}>#{tag}</span>
-											))
-										}</div>
+									<div
+										style={{ display: "flex", justifyContent: "space-between" }}
+									>
+										<div>
+											{post.data.tags.map((tag) => (
+												<span
+													style={{
+														fontSize: "14px",
+														background: "white",
+														margin: "4px",
+													}}
+												>
+													#{tag}
+												</span>
+											))}
+										</div>
 										<div class="date">
-											{post.data.pubDate && <FormattedDate date={post.data.pubDate} />}
+											{post.data.pubDate && (
+												<FormattedDate date={post.data.pubDate} />
+											)}
 										</div>
 									</div>
 								</a>
